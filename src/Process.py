@@ -7,6 +7,9 @@ from snowballstemmer import stemmer
 
 
 class PreProcess:
+    """
+    Yazılı metin verileri üzerinde ön işleme gerçekleştiren sınıf.
+    """
 
     filtered_words = []
     rooted_words = []
@@ -16,14 +19,14 @@ class PreProcess:
     porter_stemmer = stemmer('turkish')
     word_net_lemmatizer = WordNetLemmatizer()
 
-    def __init__(self, language='turkish'):
+    def __init__(self, language: str = 'turkish'):
         """
         Yapıcı metod.
         :param language: Gereksiz kelimelerin hangi dilde ayıklanacağını belirten parametre.
         """
         self.stopwords = stopwords.words(language)
 
-    def extract_stop_words(self, sentence):
+    def extract_stop_words(self, sentence: str):
         """
         Cümledeki gereksiz kelimeleri filtreleyen metod.
         :param sentence: Gereksiz kelimelerin filtreleneceği cümle.
@@ -35,7 +38,7 @@ class PreProcess:
                 self.filtered_words.append(word)
         return ' '.join(self.filtered_words)
 
-    def stem_words(self, sentence):
+    def stem_words(self, sentence: str):
         """
         Cümlenin köklerini bulan metod.
         :param sentence: Kökleri bulunacak cümle.
@@ -46,7 +49,7 @@ class PreProcess:
             self.rooted_words.append(' '.join(self.porter_stemmer.stemWords(word.split())))
         return self.rooted_words
 
-    def part_of_speech(self, sentence):
+    def part_of_speech(self, sentence: str):
         """
         Cümledeki öğeleri bulan metod.
         :param sentence: Öğeleri bulunacak cümle.
@@ -54,28 +57,10 @@ class PreProcess:
         """
         return pos_tag(word_tokenize(sentence))
 
-
-    def named_entity_recognition(self, sentence):
+    def named_entity_recognition(self, sentence: str):
         """
         Cümle içerisinde varlık isim tanıma yapan metod.
         :param sentence: Tanımanın yapılacağı cümle.
         :return: Varlık isim tanımlandırılmıi cümle.
         """
         return nltk.ne_chunk(pos_tag(word_tokenize(sentence)))
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
