@@ -5,6 +5,7 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from snowballstemmer import stemmer
 import re
+from textblob import TextBlob
 
 
 class PreProcess:
@@ -23,14 +24,14 @@ class PreProcess:
 
     def __init__(self, language: str = 'turkish'):
         """
-        Yapıcı metod.
+        Yapıcı metot.
         :param language: Gereksiz kelimelerin hangi dilde ayıklanacağını belirten parametre.
         """
         self.stopwords = stopwords.words(language)
 
     def extract_stop_words(self, sentence: str):
         """
-        Cümledeki gereksiz kelimeleri filtreleyen metod.
+        Cümledeki gereksiz kelimeleri filtreleyen metot.
         :param sentence: Gereksiz kelimelerin filtreleneceği cümle.
         :return: Gereksiz kelimelerden filtrelenmiş cümle.
         """
@@ -42,7 +43,7 @@ class PreProcess:
 
     def stem_words(self, sentence: str):
         """
-        Cümlenin köklerini bulan metod.
+        Cümlenin köklerini bulan metot.
         :param sentence: Kökleri bulunacak cümle.
         :return: Cümledeki köklerin listesi.
         """
@@ -53,7 +54,7 @@ class PreProcess:
 
     def part_of_speech(self, sentence: str):
         """
-        Cümledeki öğeleri bulan metod.
+        Cümledeki öğeleri bulan metot.
         :param sentence: Öğeleri bulunacak cümle.
         :return: Cümlede bulunan öğelerin listesi.
         """
@@ -61,9 +62,9 @@ class PreProcess:
 
     def named_entity_recognition(self, sentence: str):
         """
-        Cümle içerisinde varlık isim tanıma yapan metod.
+        Cümle içerisinde varlık isim tanıma yapan metot.
         :param sentence: Tanımanın yapılacağı cümle.
-        :return: Varlık isim tanımlandırılmıi cümle.
+        :return: Varlık isim tanımlandırılmış cümle.
         """
         return nltk.ne_chunk(pos_tag(word_tokenize(sentence)))
 
@@ -80,9 +81,9 @@ class TweetPreProcess(PreProcess):
 
     def clear_meta_characters(self, tweet: str):
         """
-        Meta karakterleri temizleyen metod.
+        Meta karakterleri temizleyen metot.
         :param tweet: str
-        :return: Meta kararkterlerden temizlenmiş tweet.
+        :return: str
         """
         tweet = str(tweet).lower()
         for replace in self.meta_characters:
@@ -91,10 +92,35 @@ class TweetPreProcess(PreProcess):
 
     def clear_urls(self, tweet: str):
         """
-        Tweet içindeki linkleri temizleyen metod.
+        Tweet içindeki linkleri temizleyen metot.
         :param tweet: str
-        :return: Linklerden temizlenmiş tweet.
+        :return: str
         """
         return re.sub(r"http\S+", re.sub(r"@\S+", "", tweet.lower())).strip()
+
+    def clear_hashtags(self, tweet: str):
+        """
+        Hashtaglari temizleyen metot.
+        :param tweet: str
+        :return: str
+        """
+        return re.sub(r"#\S+", "", tweet).strip
+
+    def clear_punctation(self, tweet: str):
+        """
+        Noktalama işaretlerini temizleyen metot.
+        :param tweet: str
+        :return: str
+        """
+        return tweet.replace('[^\w\s]', '')
+
+    def clear_numbers(self, tweet: str):
+        """
+        Sayıları Temizleyen metot.
+        :param tweet: str
+        :return: str
+        """
+        return tweet.replace('%d', '')
+
 
 
