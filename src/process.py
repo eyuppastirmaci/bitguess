@@ -5,7 +5,6 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from snowballstemmer import stemmer
 import re
-from textblob import TextBlob
 
 
 class PreProcess:
@@ -64,14 +63,14 @@ class PreProcess:
         """
         Cümle içerisinde varlık isim tanıma yapan metot.
         :param sentence: Tanımanın yapılacağı cümle.
-        :return: Varlık isim tanımlandırılmış cümle.
+        :return: str.
         """
         return nltk.ne_chunk(pos_tag(word_tokenize(sentence)))
 
 
 class TweetPreProcess(PreProcess):
     """
-    Tweet metinleri üzerinde ön işleme gerçekleştiren class.
+    Tweet metinleri üzerinde ön işleme gerçekleştiren sınıf.
     """
 
     meta_characters = ["rt", "\n", "\t"]
@@ -121,6 +120,3 @@ class TweetPreProcess(PreProcess):
         :return: str
         """
         return tweet.replace('%d', '')
-
-
-
