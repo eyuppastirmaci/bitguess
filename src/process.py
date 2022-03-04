@@ -4,17 +4,19 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from snowballstemmer import stemmer
+import re
 
 
 class PreProcess:
     """
-    Yazılı metin verileri üzerinde ön işleme gerçekleştiren sınıf.
+    Metin üzerinde ön işleme gerçekleştiren sınıf.
     """
 
     filtered_words = []
     rooted_words = []
     named_entities = []
     lemmatized_words = []
+
 
     porter_stemmer = stemmer('turkish')
     word_net_lemmatizer = WordNetLemmatizer()
@@ -64,3 +66,35 @@ class PreProcess:
         :return: Varlık isim tanımlandırılmıi cümle.
         """
         return nltk.ne_chunk(pos_tag(word_tokenize(sentence)))
+
+
+class TweetPreProcess(PreProcess):
+    """
+    Tweet metinleri üzerinde ön işleme gerçekleştiren class.
+    """
+
+    meta_characters = ["rt", "\n", "\t"]
+
+    def __init__(self):
+        super().__init__()
+
+    def clear_meta_characters(self, tweet: str):
+        """
+        Meta karakterleri temizleyen metod.
+        :param tweet: str
+        :return: Meta kararkterlerden temizlenmiş tweet.
+        """
+        tweet = str(tweet).lower()
+        for replace in self.meta_characters:
+            tweet = tweet.replace(replace, '')
+        return tweet
+
+    def clear_urls(self, tweet: str):
+        """
+        Tweet içindeki linkleri temizleyen metod.
+        :param tweet: str
+        :return: Linklerden temizlenmiş tweet.
+        """
+        return re.sub(r"http\S+", re.sub(r"@\S+", "", tweet.lower())).strip()
+
+
