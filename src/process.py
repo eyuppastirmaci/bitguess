@@ -18,7 +18,6 @@ class PreProcess:
     named_entities = []
     lemmatized_words = []
 
-
     porter_stemmer = stemmer('turkish')
     word_net_lemmatizer = WordNetLemmatizer()
 
@@ -66,7 +65,7 @@ class PreProcess:
         :param sentence: Tanımanın yapılacağı cümle.
         :return: str.
         """
-        return nltk.ne_chunk(pos_tag(word_tokenize(sentence)))
+        return nltk.ne_chunk(self.part_of_speech(sentence))
 
     def process(self, sentence: str):
         """
@@ -82,10 +81,9 @@ class TweetPreProcess(PreProcess):
     Tweet metinleri üzerinde ön işleme gerçekleştiren sınıf.
     """
 
-    meta_characters = ["rt", "\n", "\t"]
-
-    def __init__(self):
+    def __init__(self, meta_characters):
         super().__init__()
+        self.meta_characters = meta_characters
 
     def clear_meta_characters(self, tweet: str):
         """
@@ -143,4 +141,3 @@ class TweetPreProcess(PreProcess):
         sentence = self.clear_punctation(sentence)
         sentence = self.clear_numbers(sentence)
         return sentence
-

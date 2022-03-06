@@ -1,2 +1,2 @@
 # simple-nlp-app
-Simlpe Nlp Application
+Simple Nlp Application
