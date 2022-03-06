@@ -69,6 +69,11 @@ class PreProcess:
         return nltk.ne_chunk(pos_tag(word_tokenize(sentence)))
 
     def process(self, sentence: str):
+        """
+        Parametre olarak verilen metinde ön işlene yapan metot.
+        :param sentence: str
+        :return: str
+        """
         return self.extract_stop_words(sentence)
 
 
@@ -81,7 +86,6 @@ class TweetPreProcess(PreProcess):
 
     def __init__(self):
         super().__init__()
-
 
     def clear_meta_characters(self, tweet: str):
         """
@@ -127,6 +131,11 @@ class TweetPreProcess(PreProcess):
         return re.sub(r'[0-9]+', '', tweet)
 
     def process(self, sentence: str):
+        """
+        Parametre olarak verilen tweetde ön işlene yapan metot.
+        :param sentence: str
+        :return: str
+        """
         sentence = self.extract_stop_words(sentence)
         sentence = self.clear_meta_characters(sentence)
         sentence = self.clear_urls(sentence)
