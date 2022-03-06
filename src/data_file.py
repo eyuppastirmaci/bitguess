@@ -6,13 +6,14 @@ class CsvFile:
     Csv dosyasını işleyen sınıf.
     """
 
-    def __init__(self, path: str, column_names: list):
+    def __init__(self, path: str):
         """
         Yapıcı meteot.
         :param path: Dosyanın yolu.
-        :param column_names: Dosyadaki sütun isimleri.
+        :param use_column_names: Dosyadaki sütun isimleri.
         """
-        self.data_frame = pd.read_csv(path, column_names)
+        pd.set_option('display.max_columns', 500)
+        self.data_frame = pd.read_csv(path)
 
     def get_column_list(self):
         """

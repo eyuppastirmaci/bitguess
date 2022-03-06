@@ -1,20 +1,14 @@
-from process import PreProcess
+from process import TweetPreProcess
+from data_file import CsvFile
 
 
 def main():
-    pre_process = PreProcess()
+    pre_process = TweetPreProcess()
+    csv_file = CsvFile("data/turkish_tweets.csv")
+    tweet_list = csv_file.data_frame.text.tolist()
 
-    # Sample
-    turkish_example_word = '1941 yılında astronomlar, 100 inç (2.500 mm)lik bir teleskop kullanarak süpernovadan arta kalan gaz kalıntısını tespit ettiler. Bu süpernovadan kaynaklanan kalıntı, türünün "prototip" nesnelerinden biri olarak kabul edilir ve hâlen astronomlarca üzerinde pek çok çalışmalar yapılmaktadır.'
-    print(turkish_example_word)
-    print("_____________________")
-    print(pre_process.extract_stop_words(turkish_example_word))
-    print("_____________________")
-    print(pre_process.stem_words(turkish_example_word))
-    print("_____________________")
-    print(pre_process.part_of_speech(turkish_example_word))
-    print("_____________________")
-    print(pre_process.named_entity_recognition(turkish_example_word))
+    for tweet in tweet_list:
+        print(pre_process.process(tweet))
 
 
 if __name__ == '__main__':

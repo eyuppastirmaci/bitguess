@@ -5,6 +5,7 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from snowballstemmer import stemmer
 import re
+import string
 
 
 class PreProcess:
@@ -67,6 +68,9 @@ class PreProcess:
         """
         return nltk.ne_chunk(pos_tag(word_tokenize(sentence)))
 
+    def process(self, sentence: str):
+        return self.extract_stop_words(sentence)
+
 
 class TweetPreProcess(PreProcess):
     """
@@ -77,6 +81,7 @@ class TweetPreProcess(PreProcess):
 
     def __init__(self):
         super().__init__()
+
 
     def clear_meta_characters(self, tweet: str):
         """
@@ -95,7 +100,7 @@ class TweetPreProcess(PreProcess):
         :param tweet: str
         :return: str
         """
-        return re.sub(r"http\S+", re.sub(r"@\S+", "", tweet.lower())).strip()
+        return re.sub(r"http\S+", "", re.sub(r"@\S+", "", tweet.lower())).strip()
 
     def clear_hashtags(self, tweet: str):
         """
@@ -103,7 +108,7 @@ class TweetPreProcess(PreProcess):
         :param tweet: str
         :return: str
         """
-        return re.sub(r"#\S+", "", tweet).strip
+        return re.sub(r"#\S+", "", tweet).strip()
 
     def clear_punctation(self, tweet: str):
         """
@@ -111,7 +116,7 @@ class TweetPreProcess(PreProcess):
         :param tweet: str
         :return: str
         """
-        return tweet.replace('[^\w\s]', '')
+        return tweet.translate(str.maketrans('', '', string.punctuation))
 
     def clear_numbers(self, tweet: str):
         """
@@ -119,4 +124,14 @@ class TweetPreProcess(PreProcess):
         :param tweet: str
         :return: str
         """
-        return tweet.replace('%d', '')
+        return re.sub(r'[0-9]+', '', tweet)
+
+    def process(self, sentence: str):
+        sentence = self.extract_stop_words(sentence)
+        sentence = self.clear_meta_characters(sentence)
+        sentence = self.clear_urls(sentence)
+        sentence = self.clear_hashtags(sentence)
+        sentence = self.clear_punctation(sentence)
+        sentence = self.clear_numbers(sentence)
+        return sentence
+
