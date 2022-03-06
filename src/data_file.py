@@ -17,7 +17,6 @@ class CsvFile:
         self.data_frame = pd.read_csv(path)
         self.pre_process = pre_process
 
-
     def pre_process_column(self, csv_data_frame, new_tweet_list: list, replaced_column_index: int):
         """
         Csv dosyasında ön işleme yapıp yeni dosya olarak kaydeden metot.

@@ -51,7 +51,8 @@ class PreProcess:
             self.rooted_words.append(' '.join(self.porter_stemmer.stemWords(word.split())))
         return self.rooted_words
 
-    def part_of_speech(self, sentence: str):
+    @classmethod
+    def part_of_speech(cls, sentence: str):
         """
         Cümledeki öğeleri bulan metot.
         :param sentence: Öğeleri bulunacak cümle.
@@ -96,7 +97,8 @@ class TweetPreProcess(PreProcess):
             tweet = tweet.replace(replace, '')
         return tweet
 
-    def clear_urls(self, tweet: str):
+    @classmethod
+    def clear_urls(cls, tweet: str):
         """
         Tweet içindeki linkleri temizleyen metot.
         :param tweet: str
@@ -104,7 +106,8 @@ class TweetPreProcess(PreProcess):
         """
         return re.sub(r"http\S+", "", re.sub(r"@\S+", "", tweet.lower())).strip()
 
-    def clear_hashtags(self, tweet: str):
+    @classmethod
+    def clear_hashtags(cls, tweet: str):
         """
         Hashtaglari temizleyen metot.
         :param tweet: str
@@ -112,7 +115,8 @@ class TweetPreProcess(PreProcess):
         """
         return re.sub(r"#\S+", "", tweet).strip()
 
-    def clear_punctation(self, tweet: str):
+    @classmethod
+    def clear_punctuation(cls, tweet: str):
         """
         Noktalama işaretlerini temizleyen metot.
         :param tweet: str
@@ -120,7 +124,8 @@ class TweetPreProcess(PreProcess):
         """
         return tweet.translate(str.maketrans('', '', string.punctuation))
 
-    def clear_numbers(self, tweet: str):
+    @classmethod
+    def clear_numbers(cls, tweet: str):
         """
         Sayıları Temizleyen metot.
         :param tweet: str
@@ -138,6 +143,6 @@ class TweetPreProcess(PreProcess):
         sentence = self.clear_meta_characters(sentence)
         sentence = self.clear_urls(sentence)
         sentence = self.clear_hashtags(sentence)
-        sentence = self.clear_punctation(sentence)
+        sentence = self.clear_punctuation(sentence)
         sentence = self.clear_numbers(sentence)
         return sentence
