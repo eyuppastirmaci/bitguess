@@ -3,7 +3,7 @@ from data_file import CsvFile
 
 
 def main():
-    meta_characters = ["rt", "\n", "\t"]
+    meta_characters = ["rt ", "\n", "\t"]
 
     pre_process = TweetPreProcess(meta_characters)
     csv_file = CsvFile("data/turkish_tweets.csv", pre_process)
