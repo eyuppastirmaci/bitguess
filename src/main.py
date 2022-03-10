@@ -12,10 +12,10 @@ def main():
     encoding = "utf-8"
 
     tweet_pre_process = TweetPreProcess(meta_characters)
-    csv_file = CsvFile(csv_file_path, tweet_pre_process, out_file_path,
-                       encoding)
+    csv_file = CsvFile(csv_file_path, tweet_pre_process, out_file_path, encoding)
     csv_data_frame = csv_file.data_frame
     tweet_list = csv_data_frame.text.tolist()
+
     csv_file.pre_process_column(csv_data_frame, tweet_list, column_index)
 
 
