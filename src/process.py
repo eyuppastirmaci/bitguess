@@ -28,6 +28,15 @@ class PreProcess:
         """
         self.stopwords = stopwords.words(language)
 
+    @staticmethod
+    def part_of_speech(sentence: str):
+        """
+        Cümledeki öğeleri bulan metot.
+        :param sentence: Öğeleri bulunacak cümle.
+        :return: Cümlede bulunan öğelerin listesi.
+        """
+        return pos_tag(word_tokenize(sentence))
+
     def extract_stop_words(self, sentence: str):
         """
         Cümledeki gereksiz kelimeleri filtreleyen metot.
@@ -50,15 +59,6 @@ class PreProcess:
         for word in word_tokenize(sentence):
             self.rooted_words.append(' '.join(self.porter_stemmer.stemWords(word.split())))
         return self.rooted_words
-
-    @classmethod
-    def part_of_speech(cls, sentence: str):
-        """
-        Cümledeki öğeleri bulan metot.
-        :param sentence: Öğeleri bulunacak cümle.
-        :return: Cümlede bulunan öğelerin listesi.
-        """
-        return pos_tag(word_tokenize(sentence))
 
     def named_entity_recognition(self, sentence: str):
         """
@@ -86,6 +86,42 @@ class TweetPreProcess(PreProcess):
         super().__init__()
         self.meta_characters = meta_characters
 
+    @staticmethod
+    def clear_urls(tweet: str):
+        """
+        Tweet içindeki linkleri temizleyen metot.
+        :param tweet: str
+        :return: str
+        """
+        return re.sub(r"http\S+", "", re.sub(r"@\S+", "", tweet.lower())).strip()
+
+    @staticmethod
+    def clear_hashtags(tweet: str):
+        """
+        Hashtaglari temizleyen metot.
+        :param tweet: str
+        :return: str
+        """
+        return re.sub(r"#\S+", "", tweet).strip()
+
+    @staticmethod
+    def clear_punctuation(tweet: str):
+        """
+        Noktalama işaretlerini temizleyen metot.
+        :param tweet: str
+        :return: str
+        """
+        return tweet.translate(str.maketrans('', '', string.punctuation))
+
+    @staticmethod
+    def clear_numbers(tweet: str):
+        """
+        Sayıları Temizleyen metot.
+        :param tweet: str
+        :return: str
+        """
+        return re.sub(r'[0-9]+', '', tweet)
+
     def clear_meta_characters(self, tweet: str):
         """
         Meta karakterleri temizleyen metot.
@@ -96,42 +132,6 @@ class TweetPreProcess(PreProcess):
         for replace in self.meta_characters:
             tweet = tweet.replace(replace, '')
         return tweet
-
-    @classmethod
-    def clear_urls(cls, tweet: str):
-        """
-        Tweet içindeki linkleri temizleyen metot.
-        :param tweet: str
-        :return: str
-        """
-        return re.sub(r"http\S+", "", re.sub(r"@\S+", "", tweet.lower())).strip()
-
-    @classmethod
-    def clear_hashtags(cls, tweet: str):
-        """
-        Hashtaglari temizleyen metot.
-        :param tweet: str
-        :return: str
-        """
-        return re.sub(r"#\S+", "", tweet).strip()
-
-    @classmethod
-    def clear_punctuation(cls, tweet: str):
-        """
-        Noktalama işaretlerini temizleyen metot.
-        :param tweet: str
-        :return: str
-        """
-        return tweet.translate(str.maketrans('', '', string.punctuation))
-
-    @classmethod
-    def clear_numbers(cls, tweet: str):
-        """
-        Sayıları Temizleyen metot.
-        :param tweet: str
-        :return: str
-        """
-        return re.sub(r'[0-9]+', '', tweet)
 
     def process(self, sentence: str):
         """

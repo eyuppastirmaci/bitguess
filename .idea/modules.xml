@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/simple-nlp-app.iml" filepath="$PROJECT_DIR$/.idea/simple-nlp-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../twitter-sentiment-analysis/.idea/twitter-sentiment-analysis.iml" filepath="$PROJECT_DIR$/../twitter-sentiment-analysis/.idea/twitter-sentiment-analysis.iml" />
     </modules>
   </component>
 </project>

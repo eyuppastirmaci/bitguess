@@ -7,15 +7,16 @@ class CsvFile:
     Csv dosyasını işleyen sınıf.
     """
 
-    def __init__(self, path: str, pre_process: PreProcess):
+    def __init__(self, path: str, pre_process: PreProcess, out_path: str, encoding: str):
         """
         Yapıcı meteot.
         :param path: Dosyanın yolu.
-        :param use_column_names: Dosyadaki sütun isimleri.
+        :param pre_process: Ön işleme nesnesi.
         """
-        pd.set_option('display.max_columns', 500)
         self.data_frame = pd.read_csv(path)
         self.pre_process = pre_process
+        self.out_path = out_path
+        self.encoding = encoding
 
     def pre_process_column(self, csv_data_frame, new_tweet_list: list, replaced_column_index: int):
         """
@@ -27,5 +28,5 @@ class CsvFile:
         column_number = csv_data_frame.columns[replaced_column_index]
         csv_data_frame.drop(column_number, axis=1, inplace=True)
         csv_data_frame[column_number] = new_tweet_list
-        csv_data_frame.to_csv("data/pre_processed-turkish_tweets.csv", encoding='utf-8')
+        csv_data_frame.to_csv(self.out_path, self.encoding)
         print("Ön İşleme Tamamlandı!")
