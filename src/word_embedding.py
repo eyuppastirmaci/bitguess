@@ -1,8 +1,7 @@
-from gensim.test.utils import common_texts
 from gensim.models import Word2Vec
 
 
-class WordEmbed:
+class WordVector:
     """
     Kelime vektör sınıfı.
     """
