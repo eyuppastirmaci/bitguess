@@ -1,5 +1,5 @@
-from pre_process import TweetPreProcess
-from data_file import CsvFile
+from preprocess import TweetPreProcess
+from data_file import DataFile
 
 
 def main():
@@ -7,16 +7,16 @@ def main():
 
     column_index = 8
 
-    csv_file_path = "data/turkish_tweets.csv"
-    out_file_path = "data/pre_processed-turkish_tweets.csv"
+    data_path = "data/turkish_tweets.csv"
+    out_path = "data/pre_processed-turkish_tweets.csv"
     encoding = 'utf-8'
 
-    tweet_pre_process = TweetPreProcess(meta_characters)
-    csv_file = CsvFile(csv_file_path, tweet_pre_process, out_file_path, encoding)
-    csv_data_frame = csv_file.data_frame
-    tweet_list = csv_data_frame.text.tolist()
+    preprocess = TweetPreProcess(meta_characters)
+    data_file = DataFile(data_path, preprocess, out_path, encoding)
+    data_frame = data_file.data_frame
+    data_list = data_frame.text.tolist()
 
-    csv_file.pre_process_column(csv_data_frame, tweet_list, column_index)
+    data_file.pre_process_column(data_frame, data_list, column_index)
 
 
 if __name__ == "__main__":
