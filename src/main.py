@@ -8,11 +8,11 @@ def main():
     column_index = 8
 
     csv_file_path = "data/turkish_tweets.csv"
-    out_path = "data/pre_processed-turkish_tweets.csv"
+    out_file_path = "data/pre_processed-turkish_tweets.csv"
     encoding = "utf-8"
 
-    pre_process = TweetPreProcess(meta_characters)
-    csv_file = CsvFile(path=csv_file_path, pre_process=pre_process, out_path=out_path,
+    tweet_pre_process = TweetPreProcess(meta_characters=meta_characters)
+    csv_file = CsvFile(path=csv_file_path, pre_process=tweet_pre_process, out_path=out_file_path,
                        encoding=encoding)
     csv_data_frame = csv_file.data_frame
     tweet_list = csv_data_frame.text.tolist()
