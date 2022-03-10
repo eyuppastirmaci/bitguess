@@ -28,5 +28,5 @@ class CsvFile:
         column_number = csv_data_frame.columns[replaced_column_index]
         csv_data_frame.drop(column_number, axis=1, inplace=True)
         csv_data_frame[column_number] = new_tweet_list
-        csv_data_frame.to_csv(self.out_path, self.encoding)
+        csv_data_frame.to_csv(self.out_path, encoding=self.encoding)
         print("Ön İşleme Tamamlandı!")
