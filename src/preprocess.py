@@ -13,20 +13,19 @@ class PreProcess:
     Metin üzerinde ön işleme gerçekleştiren sınıf.
     """
 
-    filtered_words = []
-    rooted_words = []
-    named_entities = []
-    lemmatized_words = []
-
-    porter_stemmer = stemmer('turkish')
-    word_net_lemmatizer = WordNetLemmatizer()
-
     def __init__(self, language: str = 'turkish'):
         """
         Yapıcı metot.
         :param language: Gereksiz kelimelerin hangi dilde ayıklanacağını belirten parametre.
         """
         self.stopwords = stopwords.words(language)
+        self.porter_stemmer = stemmer('turkish')
+        self.word_net_lemmatizer = WordNetLemmatizer()
+        self.filtered_words = []
+        self.rooted_words = []
+        self.named_entities = []
+        self.lemmatized_words = []
+
 
     @staticmethod
     def part_of_speech(sentence: str):
