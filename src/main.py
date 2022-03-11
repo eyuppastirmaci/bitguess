@@ -18,7 +18,7 @@ def main():
     data_file = DataFile(data_path, preprocess, out_path, encoding)
     data_file.pre_process_column(column_index)
 
-    # Kelime gömxme
+    # Kelime gömme
     word_vector = WordVector("data/preprocessed-data.csv", encoding)
     model_sg = word_vector.model_sg
     model_cbow = word_vector.model_cbow
