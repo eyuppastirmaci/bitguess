@@ -12,7 +12,7 @@ class WordVector:
         Yapıcı metot.
         """
         self._corpus = []
-        self.data = pd.read_csv(path, encoding).text.tolist()
+        self.data = pd.read_csv(path, encoding=encoding).text.tolist()
         self._model_sg = self.get_model(1)
         self._model_cbow = self.get_model(0)
 
@@ -28,7 +28,7 @@ class WordVector:
         """
         Kelime vektör modeli oluşturan metot
         """
-        if len(self._corpus) > 0:
+        if len(self._corpus):
             self._corpus.clear()
         for sentence in self.data:
             self._corpus.append(sentence.split())
