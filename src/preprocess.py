@@ -18,13 +18,13 @@ class PreProcess:
         Yapıcı metot.
         :param language: Gereksiz kelimelerin hangi dilde ayıklanacağını belirten parametre.
         """
-        self.stopwords = stopwords.words(language)
-        self.porter_stemmer = stemmer('turkish')
-        self.word_net_lemmatizer = WordNetLemmatizer()
-        self.filtered_words = []
-        self.rooted_words = []
-        self.named_entities = []
-        self.lemmatized_words = []
+        self._stopwords = stopwords.words(language)
+        self._porter_stemmer = stemmer('turkish')
+        self._word_net_lemmatizer = WordNetLemmatizer()
+        self._filtered_words = []
+        self._rooted_words = []
+        self._named_entities = []
+        self._lemmatized_words = []
 
 
     @staticmethod
@@ -42,11 +42,11 @@ class PreProcess:
         :param sentence: Gereksiz kelimelerin filtreleneceği cümle.
         :return: Gereksiz kelimelerden filtrelenmiş cümle.
         """
-        self.filtered_words.clear()
+        self._filtered_words.clear()
         for word in word_tokenize(sentence):
-            if word not in self.stopwords:
-                self.filtered_words.append(word)
-        return ' '.join(self.filtered_words)
+            if word not in self._stopwords:
+                self._filtered_words.append(word)
+        return ' '.join(self._filtered_words)
 
     def stem_words(self, sentence: str):
         """
@@ -54,10 +54,10 @@ class PreProcess:
         :param sentence: Kökleri bulunacak cümle.
         :return: Cümledeki köklerin listesi.
         """
-        self.rooted_words.clear()
+        self._rooted_words.clear()
         for word in word_tokenize(sentence):
-            self.rooted_words.append(' '.join(self.porter_stemmer.stemWords(word.split())))
-        return self.rooted_words
+            self._rooted_words.append(' '.join(self._porter_stemmer.stemWords(word.split())))
+        return self._rooted_words
 
     def named_entity_recognition(self, sentence: str):
         """

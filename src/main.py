@@ -1,8 +1,10 @@
 from preprocess import TweetPreProcess
 from data_file import DataFile
+from word_embedding import WordVector
 
 
 def main():
+    # Parametreler
     meta_characters = ["rt ", "\n", "\t"]
 
     column_index = 8
@@ -11,15 +13,15 @@ def main():
     out_path = "data/preprocessed-data.csv"
     encoding = 'utf-8'
 
+    # Ön işleme
     preprocess = TweetPreProcess(meta_characters)
     data_file = DataFile(data_path, preprocess, out_path, encoding)
-    data_frame = data_file.data_frame
-    data_list = data_frame.text.tolist()
+    data_file.pre_process_column(column_index)
 
-    data_file.pre_process_column(data_frame, data_list, column_index)
-
-    corpus = data_file.column_to_corpus("data/preprocessed-data.csv")
-
+    # Kelime gömxme
+    word_vector = WordVector("data/preprocessed-data.csv", encoding)
+    model_sg = word_vector.model_sg
+    model_cbow = word_vector.model_cbow
 
 
 if __name__ == "__main__":
