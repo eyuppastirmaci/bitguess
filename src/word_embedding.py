@@ -13,18 +13,10 @@ class WordVector:
         """
         self._corpus = []
         self.data = pd.read_csv(path, encoding=encoding).text.tolist()
-        self._model_sg = self.get_model(1)
-        self._model_cbow = self.get_model(0)
+        self.model_sg = self.__get_model(1)
+        self.model_cbow = self.__get_model(0)
 
-    @property
-    def model_sg(self):
-        return self._model_sg
-
-    @property
-    def model_cbow(self):
-        return self._model_cbow
-
-    def get_model(self, sg):
+    def __get_model(self, sg):
         """
         Kelime vektör modeli oluşturan metot
         """
