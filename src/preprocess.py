@@ -54,7 +54,7 @@ class PreProcess:
         """
         return nltk.ne_chunk(self.__part_of_speech(sentence))
 
-    def extract_stop_words(self, sentence: str):
+    def _extract_stop_words(self, sentence: str):
         """
         Cümledeki gereksiz kelimeleri filtreleyen metot.
         :param sentence: Gereksiz kelimelerin filtreleneceği cümle.
@@ -72,7 +72,7 @@ class PreProcess:
         :param sentence: str
         :return: str
         """
-        return self.extract_stop_words(sentence)
+        return self._extract_stop_words(sentence)
 
 
 class TweetPreProcess(PreProcess):
@@ -96,7 +96,20 @@ class TweetPreProcess(PreProcess):
         :param tweet: str
         :return: str
         """
-        return re.sub(r"http\S+", "", re.sub(r"@\S+", "", tweet.lower())).strip()
+        return re.sub(r"http\S+", "", tweet).strip()
+
+    @staticmethod
+    def __clear_domain(tweet: str):
+        """
+        Tweet içindeki linkleri temizleyen metot.
+        :param tweet: str
+        :return: str
+        """
+        return re.sub(r"www\S+", "", tweet).strip()
+
+    @staticmethod
+    def __clear_at(tweet: str):
+        return re.sub(r"@\S+", "", tweet).strip()
 
     @staticmethod
     def __clear_hashtags(tweet: str):
@@ -142,11 +155,15 @@ class TweetPreProcess(PreProcess):
         :param sentence: str
         :return: str
         """
-        sentence = self.extract_stop_words(sentence)
+        sentence = str(sentence).lower()
+        sentence = self._extract_stop_words(sentence)
         sentence = self.__cleaning_picurl(sentence)
         sentence = self.__clear_urls(sentence)
+        sentence = self.__clear_domain(sentence)
+        sentence = self.__clear_at(sentence)
         sentence = self.__clear_hashtags(sentence)
         sentence = self.__clear_punctuation(sentence)
         sentence = self.__clear_numbers(sentence)
-        sentence = self.__clear_meta_characters(sentence)
+        sentence = sentence.replace("  ", "")
+        sentence = self.__clear_meta_characters(sentence).strip()
         return sentence

@@ -1,3 +1,5 @@
+import math
+
 from gensim.models import Word2Vec
 import pandas as pd
 
@@ -25,5 +27,6 @@ class WordVector:
     def __get_corpus(self):
         corpus = []
         for sentence in self._data:
-            corpus.append(sentence.split())
+            if sentence is not None and isinstance(sentence, str):
+                corpus.append(sentence.split())
         return corpus
