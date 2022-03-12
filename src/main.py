@@ -4,14 +4,16 @@ from word_vector import WordVector
 
 
 def preprocessing(column_index, data_path, encoding, meta_characters, out_path):
+    # Ön işleme
     preprocess = TweetPreProcess(meta_characters)
     data_file = DataFile(data_path, preprocess, out_path, encoding)
     data_file.pre_process_column(column_index)
 
 
 def word_embedding(encoding, out_path):
+    # Kelime gömme
     word_vector = WordVector(out_path, encoding)
-    model_sg = word_vector.word_embedding
+    model_sg = word_vector.model_sg
     model_cbow = word_vector.model_cbow
 
 
@@ -25,10 +27,8 @@ def main():
     out_path = "data/preprocessed-data.csv"
     encoding = 'utf-8'
 
-    # Ön işleme
     preprocessing(column_index, data_path, encoding, meta_characters, out_path)
 
-    # Kelime gömme
     word_embedding(encoding, out_path)
 
 

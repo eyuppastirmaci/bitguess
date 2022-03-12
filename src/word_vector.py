@@ -13,14 +13,14 @@ class WordVector:
         """
         self._data = pd.read_csv(path, encoding=encoding).text.tolist()
         self._corpus = self.__get_corpus()
-        self.word_embedding = self.__get_model(1)
+        self.model_sg = self.__get_model(1)
         self.model_cbow = self.__get_model(0)
 
     def __get_model(self, sg):
         """
         Kelime vektör modeli oluşturan metot
         """
-        return Word2Vec(self._corpus, sg=sg)
+        return Word2Vec(self._corpus, sg=sg, vector_size=100, window=5, min_count=5)
 
     def __get_corpus(self):
         corpus = []
