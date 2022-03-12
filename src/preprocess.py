@@ -85,6 +85,11 @@ class TweetPreProcess(PreProcess):
         self.meta_characters = meta_characters
 
     @staticmethod
+    def __cleaning_picurl(tweet):
+        tweet = re.sub(r'pic.twitter.com/[\w]*', "", tweet)
+        return tweet
+
+    @staticmethod
     def __clear_urls(tweet: str):
         """
         Tweet içindeki linkleri temizleyen metot.
@@ -138,6 +143,7 @@ class TweetPreProcess(PreProcess):
         :return: str
         """
         sentence = self.extract_stop_words(sentence)
+        sentence = self.__cleaning_picurl(sentence)
         sentence = self.__clear_urls(sentence)
         sentence = self.__clear_hashtags(sentence)
         sentence = self.__clear_punctuation(sentence)
