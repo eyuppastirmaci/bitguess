@@ -16,6 +16,9 @@ def word_embedding(encoding, out_path):
     model_sg = word_vector.model_sg
     model_cbow = word_vector.model_cbow
 
+    # Skip-Gram modelinin yukarı kelimesiyle ilişkilendirdiği kelimeler.
+    print(model_sg.wv.most_similar("yukarı"))
+
 
 def main():
     # Parametreler
