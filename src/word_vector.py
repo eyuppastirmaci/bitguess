@@ -13,7 +13,7 @@ class WordVector:
         """
         self._corpus = []
         self.data = pd.read_csv(path, encoding=encoding).text.tolist()
-        self.model_sg = self.__get_model(1)
+        self.word_embedding = self.__get_model(1)
         self.model_cbow = self.__get_model(0)
 
     def __get_model(self, sg):
