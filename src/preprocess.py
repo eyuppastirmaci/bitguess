@@ -138,9 +138,9 @@ class TweetPreProcess(PreProcess):
         :return: str
         """
         sentence = self.extract_stop_words(sentence)
-        sentence = self.__clear_meta_characters(sentence)
         sentence = self.__clear_urls(sentence)
         sentence = self.__clear_hashtags(sentence)
         sentence = self.__clear_punctuation(sentence)
         sentence = self.__clear_numbers(sentence)
+        sentence = self.__clear_meta_characters(sentence)
         return sentence
