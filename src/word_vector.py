@@ -1,5 +1,3 @@
-import math
-
 from gensim.models import Word2Vec
 import pandas as pd
 

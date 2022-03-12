@@ -19,7 +19,7 @@ class PreProcess:
         :param language: Gereksiz kelimelerin hangi dilde ayıklanacağını belirten parametre.
         """
         self._stopwords = stopwords.words(language)
-        self._porter_stemmer = stemmer('turkish')
+        self._porter_stemmer = stemmer(language)
         self._word_net_lemmatizer = WordNetLemmatizer()
         self._filtered_words = []
         self._rooted_words = []
@@ -41,7 +41,8 @@ class PreProcess:
         :param sentence: Kökleri bulunacak cümle.
         :return: Cümledeki köklerin listesi.
         """
-        self._rooted_words.clear()
+        if (len(self._rooted_words)):
+            self._rooted_words.clear()
         for word in word_tokenize(sentence):
             self._rooted_words.append(' '.join(self._porter_stemmer.stemWords(word.split())))
         return self._rooted_words
@@ -60,7 +61,8 @@ class PreProcess:
         :param sentence: Gereksiz kelimelerin filtreleneceği cümle.
         :return: Gereksiz kelimelerden filtrelenmiş cümle.
         """
-        self._filtered_words.clear()
+        if (len(self._filtered_words)):
+            self._filtered_words.clear()
         for word in word_tokenize(sentence):
             if word not in self._stopwords:
                 self._filtered_words.append(word)
@@ -81,11 +83,19 @@ class TweetPreProcess(PreProcess):
     """
 
     def __init__(self, meta_characters):
+        """
+        Yapıcı metot.
+        """
         super().__init__()
         self.meta_characters = meta_characters
 
     @staticmethod
     def __cleaning_picurl(tweet):
+        """
+        Resim linkini temizleyen metot.
+        :param tweet: str
+        :return: str
+        """
         tweet = re.sub(r'pic.twitter.com/[\w]*', "", tweet)
         return tweet
 
@@ -101,7 +111,7 @@ class TweetPreProcess(PreProcess):
     @staticmethod
     def __clear_domain(tweet: str):
         """
-        Tweet içindeki linkleri temizleyen metot.
+        Domaini temizleyen metot.
         :param tweet: str
         :return: str
         """
@@ -109,6 +119,11 @@ class TweetPreProcess(PreProcess):
 
     @staticmethod
     def __clear_at(tweet: str):
+        """
+        @ Karakteriyle başlayan kelimeleri temizleyen metot.
+        :param tweet: str
+        :return: str
+        """
         return re.sub(r"@\S+", "", tweet).strip()
 
     @staticmethod
@@ -144,7 +159,6 @@ class TweetPreProcess(PreProcess):
         :param tweet: str
         :return: str
         """
-        tweet = str(tweet).lower()
         for replace in self.meta_characters:
             tweet = tweet.replace(replace, '')
         return tweet
@@ -164,6 +178,6 @@ class TweetPreProcess(PreProcess):
         sentence = self.__clear_hashtags(sentence)
         sentence = self.__clear_punctuation(sentence)
         sentence = self.__clear_numbers(sentence)
-        sentence = sentence.replace("  ", "")
+        sentence = sentence.replace("  ", " ")
         sentence = self.__clear_meta_characters(sentence).strip()
         return sentence
