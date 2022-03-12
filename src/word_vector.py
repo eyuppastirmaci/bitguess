@@ -25,3 +25,5 @@ class WordVector:
         for sentence in self.data:
             self._corpus.append(sentence.split())
         return Word2Vec(self._corpus, sg=sg)
+
+
