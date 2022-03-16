@@ -13,7 +13,7 @@ class DataFile:
         :param path: Dosyanın yolu.
         :param pre_process: Ön işleme nesnesi.
         """
-        self._data_frame = pd.read_csv(path, encoding=encoding)
+        self._data_frame = pd.read_csv(path, encoding=encoding, low_memory=False, dtype='unicode')
         self._preprocess = pre_process
         self._out_path = out_path
         self._encoding = encoding
@@ -35,6 +35,7 @@ class DataFile:
         self._data_frame.drop("replies", axis=1, inplace=True)
         self._data_frame.drop("likes", axis=1, inplace=True)
         self._data_frame.drop("retweets", axis=1, inplace=True)
+        self._data_frame.drop("sentiment", axis=1, inplace=True)
         self._data_frame[column_number] = new_tweet_list
         self._data_frame.to_csv(self._out_path, encoding=self._encoding)
         print("Ön İşleme Tamamlandı!")

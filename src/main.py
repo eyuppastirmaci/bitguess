@@ -18,6 +18,13 @@ def word_embedding(encoding, out_path):
 
     # Skip-Gram modelinin yukarı kelimesiyle ilişkilendirdiği kelimeler.
     print(model_sg.wv.most_similar("yukarı"))
+    print(model_cbow.wv.most_similar("yukarı"))
+    print("***************")
+    print(model_sg.wv.most_similar("boğa"))
+    print(model_cbow.wv.most_similar("boğa"))
+    print("***************")
+    print(model_sg.wv.most_similar("ayı"))
+    print(model_cbow.wv.most_similar("ayı"))
 
 
 def main():
