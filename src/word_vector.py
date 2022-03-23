@@ -23,6 +23,9 @@ class WordVector:
         return Word2Vec(self._corpus, sg=sg, vector_size=100, window=5, min_count=5)
 
     def __get_corpus(self):
+        """
+        Model için gerekli kelime sözlüğünü oluşturan metot.
+        """
         corpus = []
         for sentence in self._data:
             if sentence is not None and isinstance(sentence, str):

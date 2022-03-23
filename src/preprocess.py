@@ -1,8 +1,9 @@
 import nltk
 from nltk import pos_tag
-from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from turkishnlp import detector
 from snowballstemmer import stemmer
 import re
 import string
@@ -13,68 +14,136 @@ class PreProcess:
     Metin üzerinde ön işleme gerçekleştiren sınıf.
     """
 
-    def __init__(self, language: str = 'turkish'):
+    def __init__(self, meta_characters, is_stem_words: bool = False, is_typo_fix: bool = False, language: str = 'turkish'):
         """
         Yapıcı metot.
-        :param language: Gereksiz kelimelerin hangi dilde ayıklanacağını belirten parametre.
         """
+        self.meta_characters = meta_characters
+        self.is_stem_words = is_stem_words
+        self.is_typo_fix = is_typo_fix
         self._stopwords = stopwords.words(language)
         self._porter_stemmer = stemmer(language)
-        self._word_net_lemmatizer = WordNetLemmatizer()
         self._filtered_words = []
         self._rooted_words = []
         self._named_entities = []
         self._lemmatized_words = []
+        self.nlpDetector = detector.TurkishNLP()
+        self.nlpDetector.create_word_set()
+        self.word_net_lemmatizer = WordNetLemmatizer()
 
     @staticmethod
-    def __part_of_speech(sentence: str):
+    def _part_of_speech(sentence: str):
         """
         Cümledeki öğeleri bulan metot.
-        :param sentence: Öğeleri bulunacak cümle.
-        :return: Cümlede bulunan öğelerin listesi.
         """
         return pos_tag(word_tokenize(sentence))
 
-    def __stem_words(self, sentence: str):
+    @staticmethod
+    def _clear_urls(sentence: str):
+        """
+        Metin içindeki linkleri temizleyen metot.
+        """
+        sentence = re.sub(r"http\S+", "", sentence).strip()
+        sentence = re.sub(r"http : //\S+", "", sentence).strip()
+        sentence = re.sub(r"https : //\S+", "", sentence).strip()
+        sentence = re.sub(r": //\S+", "", sentence).strip()
+        return sentence
+
+    @staticmethod
+    def _clear_domain(sentence: str):
+        """
+        Domaini temizleyen metot.
+        """
+        return re.sub(r"www\S+", "", sentence).strip()
+
+    @staticmethod
+    def _clear_punctuation(sentence: str):
+        """
+        Noktalama işaretlerini temizleyen metot.
+        """
+        return sentence.translate(str.maketrans('', '', string.punctuation))
+
+    @staticmethod
+    def _clear_number(sentence: str):
+        """
+        Sayıları Temizleyen metot.
+        """
+        return re.sub(r'[0-9]+', '', sentence)
+
+    @staticmethod
+    def _clear_white_spaces(sentence: str):
+        """
+        Birden fazla boşluk karakterlerini temizleyen metot.
+        """
+        return re.sub(' +', ' ', sentence)
+
+    def _stem_words(self, sentence: str):
         """
         Cümlenin köklerini bulan metot.
-        :param sentence: Kökleri bulunacak cümle.
-        :return: Cümledeki köklerin listesi.
         """
-        if (len(self._rooted_words)):
+        if len(self._rooted_words):
             self._rooted_words.clear()
         for word in word_tokenize(sentence):
             self._rooted_words.append(' '.join(self._porter_stemmer.stemWords(word.split())))
         return self._rooted_words
 
-    def __named_entity_recognition(self, sentence: str):
+    def _named_entity_recognition(self, sentence: str):
         """
         Cümle içerisinde varlık isim tanıma yapan metot.
-        :param sentence: Tanımanın yapılacağı cümle.
-        :return: str.
         """
-        return nltk.ne_chunk(self.__part_of_speech(sentence))
+        return nltk.ne_chunk(self._part_of_speech(sentence))
+
+    def _fix_typos(self, sentence: str):
+        """
+        Cümle içerisindeki kelime hatalarını düzelten metot.
+        """
+        return ' '.join(self.nlpDetector.auto_correct(self.nlpDetector.list_words(sentence)))
+
+    def _get_stem_words(self, sentence: str):
+        return ' '.join(self._stem_words(sentence))
+
+    def _clear_meta_characters(self, sentence: str):
+        """
+        Meta karakterleri temizleyen metot.
+        """
+        for replace in self.meta_characters:
+            sentence = sentence.replace(replace, '')
+        return sentence
 
     def _extract_stop_words(self, sentence: str):
         """
         Cümledeki gereksiz kelimeleri filtreleyen metot.
-        :param sentence: Gereksiz kelimelerin filtreleneceği cümle.
-        :return: Gereksiz kelimelerden filtrelenmiş cümle.
         """
-        if (len(self._filtered_words)):
+        if len(self._filtered_words):
             self._filtered_words.clear()
         for word in word_tokenize(sentence):
             if word not in self._stopwords:
                 self._filtered_words.append(word)
         return ' '.join(self._filtered_words)
 
+    def _normalization(self, sentence):
+        """
+        Belirli ön işleme metotlarının tek bir fonksiyonda toplanması.
+        """
+        sentence = str(sentence).lower()
+        sentence = self._extract_stop_words(sentence)
+        sentence = self._clear_punctuation(sentence)
+        sentence = self._clear_number(sentence)
+        sentence = self._clear_meta_characters(sentence).strip()
+        sentence = self._clear_urls(sentence)
+        sentence = self._clear_domain(sentence)
+        sentence = self._clear_white_spaces(sentence)
+        if self.is_typo_fix:
+            sentence = self._fix_typos(sentence)
+        if self.is_stem_words:
+            sentence = self._get_stem_words(sentence)
+        return sentence
+
     def process(self, sentence: str):
         """
         Parametre olarak verilen metinde ön işlene yapan metot.
-        :param sentence: str
-        :return: str
         """
-        return self._extract_stop_words(sentence)
+        return self._normalization(sentence)
 
 
 class TweetPreProcess(PreProcess):
@@ -82,102 +151,41 @@ class TweetPreProcess(PreProcess):
     Tweet metinleri üzerinde ön işleme gerçekleştiren sınıf.
     """
 
-    def __init__(self, meta_characters):
+    def __init__(self, meta_characters, is_stem_words, is_typo_fix):
         """
         Yapıcı metot.
         """
-        super().__init__()
-        self.meta_characters = meta_characters
+        super().__init__(meta_characters, is_stem_words, is_typo_fix)
 
     @staticmethod
-    def __cleaning_picurl(tweet):
+    def _cleaning_picurl(tweet):
         """
         Resim linkini temizleyen metot.
-        :param tweet: str
-        :return: str
         """
         tweet = re.sub(r'pic.twitter.com/[\w]*', "", tweet)
         return tweet
 
     @staticmethod
-    def __clear_urls(tweet: str):
-        """
-        Tweet içindeki linkleri temizleyen metot.
-        :param tweet: str
-        :return: str
-        """
-        return re.sub(r"http\S+", "", tweet).strip()
-
-    @staticmethod
-    def __clear_domain(tweet: str):
-        """
-        Domaini temizleyen metot.
-        :param tweet: str
-        :return: str
-        """
-        return re.sub(r"www\S+", "", tweet).strip()
-
-    @staticmethod
-    def __clear_at(tweet: str):
+    def _clear_at(tweet: str):
         """
         @ Karakteriyle başlayan kelimeleri temizleyen metot.
-        :param tweet: str
-        :return: str
         """
         return re.sub(r"@\S+", "", tweet).strip()
 
     @staticmethod
-    def __clear_hashtags(tweet: str):
+    def _clear_hashtags(tweet: str):
         """
         Hashtaglari temizleyen metot.
-        :param tweet: str
-        :return: str
         """
         return re.sub(r"#\S+", "", tweet).strip()
 
-    @staticmethod
-    def __clear_punctuation(tweet: str):
-        """
-        Noktalama işaretlerini temizleyen metot.
-        :param tweet: str
-        :return: str
-        """
-        return tweet.translate(str.maketrans('', '', string.punctuation))
-
-    @staticmethod
-    def __clear_numbers(tweet: str):
-        """
-        Sayıları Temizleyen metot.
-        :param tweet: str
-        :return: str
-        """
-        return re.sub(r'[0-9]+', '', tweet)
-
-    def __clear_meta_characters(self, tweet: str):
-        """
-        Meta karakterleri temizleyen metot.
-        :param tweet: str
-        :return: str
-        """
-        for replace in self.meta_characters:
-            tweet = tweet.replace(replace, '')
-        return tweet
-
     def process(self, sentence: str):
+
         """
         Parametre olarak verilen tweetde ön işlene yapan metot.
-        :param sentence: str
-        :return: str
         """
-        sentence = str(sentence).lower()
-        sentence = self._extract_stop_words(sentence)
-        sentence = self.__cleaning_picurl(sentence)
-        sentence = self.__clear_urls(sentence)
-        sentence = self.__clear_domain(sentence)
-        sentence = self.__clear_at(sentence)
-        sentence = self.__clear_hashtags(sentence)
-        sentence = self.__clear_punctuation(sentence)
-        sentence = self.__clear_numbers(sentence)
-        sentence = sentence.replace("  ", " ")
-        sentence = self.__clear_meta_characters(sentence).strip()
+        sentence = self._normalization(sentence)
+        sentence = self._cleaning_picurl(sentence)
+        sentence = self._clear_at(sentence)
+        sentence = self._clear_hashtags(sentence)
         return sentence

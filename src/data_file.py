@@ -10,8 +10,6 @@ class DataFile:
     def __init__(self, path: str, pre_process: PreProcess, out_path: str, encoding: str):
         """
         Yapıcı meteot.
-        :param path: Dosyanın yolu.
-        :param pre_process: Ön işleme nesnesi.
         """
         self._data_frame = pd.read_csv(path, encoding=encoding, low_memory=False, dtype='unicode')
         self._preprocess = pre_process
