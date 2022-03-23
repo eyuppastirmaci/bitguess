@@ -43,10 +43,10 @@ class PreProcess:
         """
         Metin içindeki linkleri temizleyen metot.
         """
-        sentence = re.sub(r"http\S+", "", sentence).strip()
-        sentence = re.sub(r"http : //\S+", "", sentence).strip()
-        sentence = re.sub(r"https : //\S+", "", sentence).strip()
-        sentence = re.sub(r": //\S+", "", sentence).strip()
+        sentence = re.sub(r"http\S+", "", sentence)
+        sentence = re.sub(r"http : //\S+", "", sentence)
+        sentence = re.sub(r"https : //\S+", "", sentence)
+        sentence = re.sub(r": //\S+", "", sentence)
         return sentence
 
     @staticmethod
@@ -54,7 +54,7 @@ class PreProcess:
         """
         Domaini temizleyen metot.
         """
-        return re.sub(r"www\S+", "", sentence).strip()
+        return re.sub(r"www\S+", "", sentence)
 
     @staticmethod
     def _clear_punctuation(sentence: str):
@@ -128,10 +128,9 @@ class PreProcess:
         sentence = str(sentence).lower()
         sentence = self._extract_stop_words(sentence)
         sentence = self._clear_number(sentence)
-        sentence = self._clear_meta_characters(sentence).strip()
+        sentence = self._clear_meta_characters(sentence)
         sentence = self._clear_urls(sentence)
         sentence = self._clear_domain(sentence)
-        sentence = self._clear_white_spaces(sentence)
         if self.is_typo_fix:
             sentence = self._fix_typos(sentence)
         if self.is_stem_words:
@@ -161,7 +160,8 @@ class TweetPreProcess(PreProcess):
         """
         Resim linkini temizleyen metot.
         """
-        tweet = re.sub(r'pic.twitter.com/[\w]*', "", tweet)
+        if tweet.__contains__("pictwit"):
+            tweet = tweet[:tweet.index('pictwit')-1]
         return tweet
 
     @staticmethod
@@ -169,14 +169,14 @@ class TweetPreProcess(PreProcess):
         """
         @ Karakteriyle başlayan kelimeleri temizleyen metot.
         """
-        return re.sub(r"@\S+", "", tweet).strip()
+        return re.sub(r"@\S+", "", tweet)
 
     @staticmethod
     def _clear_hashtags(tweet: str):
         """
         Hashtaglari temizleyen metot.
         """
-        return re.sub(r"#\S+", "", tweet).strip()
+        return re.sub(r"#\S+", "", tweet)
 
     def process(self, sentence: str):
 
@@ -184,8 +184,10 @@ class TweetPreProcess(PreProcess):
         Parametre olarak verilen tweetde ön işlene yapan metot.
         """
         sentence = self._normalization(sentence)
-        sentence = self._cleaning_picurl(sentence)
         sentence = self._clear_at(sentence)
         sentence = self._clear_hashtags(sentence)
         sentence = self._clear_punctuation(sentence)
+        sentence = self._cleaning_picurl(sentence)
+        sentence = sentence.strip()
+        sentence = self._clear_white_spaces(sentence)
         return sentence
