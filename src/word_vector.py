@@ -18,7 +18,7 @@ class WordVector:
 
     def __get_model(self, sg):
         """
-        Kelime vektör modeli oluşturan metot
+        Kelime vektör modeli oluşturan metot.
         """
         return Word2Vec(self._corpus, sg=sg, vector_size=100, window=5, min_count=5)
 

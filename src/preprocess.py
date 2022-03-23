@@ -14,22 +14,23 @@ class PreProcess:
     Metin üzerinde ön işleme gerçekleştiren sınıf.
     """
 
-    def __init__(self, meta_characters, is_stem_words: bool = False, is_typo_fix: bool = False, language: str = 'turkish'):
+    def __init__(self, meta_characters, is_stem_words: bool = False, is_typo_fix: bool = False,
+                 language: str = 'turkish'):
         """
         Yapıcı metot.
         """
-        self.meta_characters = meta_characters
-        self.is_stem_words = is_stem_words
-        self.is_typo_fix = is_typo_fix
+        self._meta_characters = meta_characters
+        self._is_stem_words = is_stem_words
+        self._is_typo_fix = is_typo_fix
         self._stopwords = stopwords.words(language)
         self._porter_stemmer = stemmer(language)
         self._filtered_words = []
         self._rooted_words = []
         self._named_entities = []
         self._lemmatized_words = []
-        self.nlpDetector = detector.TurkishNLP()
-        self.nlpDetector.create_word_set()
-        self.word_net_lemmatizer = WordNetLemmatizer()
+        self._nlpDetector = detector.TurkishNLP()
+        self._nlpDetector.create_word_set()
+        self._word_net_lemmatizer = WordNetLemmatizer()
 
     @staticmethod
     def _part_of_speech(sentence: str):
@@ -97,7 +98,7 @@ class PreProcess:
         """
         Cümle içerisindeki kelime hatalarını düzelten metot.
         """
-        return ' '.join(self.nlpDetector.auto_correct(self.nlpDetector.list_words(sentence)))
+        return ' '.join(self._nlpDetector.auto_correct(self._nlpDetector.list_words(sentence)))
 
     def _get_stem_words(self, sentence: str):
         return ' '.join(self._stem_words(sentence))
@@ -106,7 +107,7 @@ class PreProcess:
         """
         Meta karakterleri temizleyen metot.
         """
-        for replace in self.meta_characters:
+        for replace in self._meta_characters:
             sentence = sentence.replace(replace, '')
         return sentence
 
@@ -131,9 +132,9 @@ class PreProcess:
         sentence = self._clear_meta_characters(sentence)
         sentence = self._clear_urls(sentence)
         sentence = self._clear_domain(sentence)
-        if self.is_typo_fix:
+        if self._is_typo_fix:
             sentence = self._fix_typos(sentence)
-        if self.is_stem_words:
+        if self._is_stem_words:
             sentence = self._get_stem_words(sentence)
         return sentence
 
@@ -183,11 +184,11 @@ class TweetPreProcess(PreProcess):
         """
         Parametre olarak verilen tweetde ön işlene yapan metot.
         """
-        sentence = self._normalization(sentence)
+        sentence = super()._normalization(sentence)
         sentence = self._clear_at(sentence)
         sentence = self._clear_hashtags(sentence)
-        sentence = self._clear_punctuation(sentence)
+        sentence = super()._clear_punctuation(sentence)
         sentence = self._cleaning_picurl(sentence)
         sentence = sentence.strip()
-        sentence = self._clear_white_spaces(sentence)
+        sentence = super()._clear_white_spaces(sentence)
         return sentence
