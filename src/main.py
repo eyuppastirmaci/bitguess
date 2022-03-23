@@ -3,9 +3,9 @@ from data_file import DataFile
 from word_vector import WordVector
 
 
-def preprocessing(column_index, data_path, encoding, meta_characters, out_path):
+def preprocessing(column_index, data_path, encoding, meta_characters, out_path, is_stem_words, is_typo_fix):
     # Ön işleme
-    preprocess = TweetPreProcess(meta_characters=meta_characters, is_stem_words=False, is_typo_fix=False)
+    preprocess = TweetPreProcess(meta_characters=meta_characters, is_stem_words=is_stem_words, is_typo_fix=is_typo_fix)
     data_file = DataFile(data_path, preprocess, out_path, encoding)
     data_file.pre_process_column(column_index)
 
@@ -34,8 +34,10 @@ def main():
     data_path = "data/data.csv"
     out_path = "data/preprocessed-data.csv"
     encoding = 'utf-8'
+    is_stemming = False
+    is_fix_typos = False
 
-    preprocessing(column_index, data_path, encoding, meta_characters, out_path)
+    preprocessing(column_index, data_path, encoding, meta_characters, out_path, is_stemming, is_fix_typos)
     word_embedding(encoding, out_path)
 
 

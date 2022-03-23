@@ -14,6 +14,9 @@ class PreProcess:
     Metin üzerinde ön işleme gerçekleştiren sınıf.
     """
 
+    _nlpDetector = detector.TurkishNLP()
+    _nlpDetector.create_word_set()
+
     def __init__(self, meta_characters, is_stem_words: bool = False, is_typo_fix: bool = False,
                  language: str = 'turkish'):
         """
@@ -28,8 +31,6 @@ class PreProcess:
         self._rooted_words = []
         self._named_entities = []
         self._lemmatized_words = []
-        self._nlpDetector = detector.TurkishNLP()
-        self._nlpDetector.create_word_set()
         self._word_net_lemmatizer = WordNetLemmatizer()
 
     @staticmethod
