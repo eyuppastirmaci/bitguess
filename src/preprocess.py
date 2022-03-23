@@ -127,7 +127,6 @@ class PreProcess:
         """
         sentence = str(sentence).lower()
         sentence = self._extract_stop_words(sentence)
-        sentence = self._clear_punctuation(sentence)
         sentence = self._clear_number(sentence)
         sentence = self._clear_meta_characters(sentence).strip()
         sentence = self._clear_urls(sentence)
@@ -188,4 +187,5 @@ class TweetPreProcess(PreProcess):
         sentence = self._cleaning_picurl(sentence)
         sentence = self._clear_at(sentence)
         sentence = self._clear_hashtags(sentence)
+        sentence = self._clear_punctuation(sentence)
         return sentence
