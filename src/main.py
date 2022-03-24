@@ -29,7 +29,7 @@ def word_embedding(encoding, out_path):
 
 def main():
     # Parametreler
-    meta_characters = ["rt ", "\n", "\t", "#"]
+    meta_characters = ["rt ", "\n", "\t"]
     column_index = 8
     data_path = "data/data.csv"
     out_path = "data/preprocessed-data.csv"
