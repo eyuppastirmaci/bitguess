@@ -29,13 +29,13 @@ class DataFile:
         self.update_column(index, new_tweet_list, out_path)
         print("--- Ön İşleme Tamamlandı ✓ ---")
 
-    def stemming(self, index: int, out_path: str):
+    def extract_roots(self, index: int, out_path: str):
         """
         Kelimelerin Köklerini bularak yeni bir csv dosyası olarak kaydeden metot.
         """
         self.update_column(index, self._preprocess.get_stem_words(self.tweet_list), out_path)
 
-    def typo_fixing(self, index: int, out_path: str):
+    def fix_typos(self, index: int, out_path: str):
         """
         Yazım yanlışlarını düzelterek yeni bir csv dosyası olarak kaydeden metot.
         """
