@@ -17,14 +17,11 @@ class PreProcess:
     _nlpDetector = detector.TurkishNLP()
     _nlpDetector.create_word_set()
 
-    def __init__(self, meta_characters, is_stem_words: bool = False, is_typo_fix: bool = False,
-                 language: str = 'turkish'):
+    def __init__(self, meta_characters, language: str = 'turkish'):
         """
         Yapıcı metot.
         """
         self._meta_characters = meta_characters
-        self._is_stem_words = is_stem_words
-        self._is_typo_fix = is_typo_fix
         self._stopwords = stopwords.words(language)
         self._porter_stemmer = stemmer(language)
         self._filtered_words = []
@@ -95,15 +92,6 @@ class PreProcess:
         """
         return nltk.ne_chunk(self._part_of_speech(sentence))
 
-    def _fix_typos(self, sentence: str):
-        """
-        Cümle içerisindeki kelime hatalarını düzelten metot.
-        """
-        return ' '.join(self._nlpDetector.auto_correct(self._nlpDetector.list_words(sentence)))
-
-    def _get_stem_words(self, sentence: str):
-        return ' '.join(self._stem_words(sentence))
-
     def _clear_meta_characters(self, sentence: str):
         """
         Meta karakterleri temizleyen metot.
@@ -133,11 +121,25 @@ class PreProcess:
         sentence = self._clear_meta_characters(sentence)
         sentence = self._clear_urls(sentence)
         sentence = self._clear_domain(sentence)
-        if self._is_typo_fix:
-            sentence = self._fix_typos(sentence)
-        if self._is_stem_words:
-            sentence = self._get_stem_words(sentence)
         return sentence
+
+    def fix_typos(self, tweet_list: list):
+        """
+        Cümle içerisinde ki kelime hatalarını düzeltip yeni liste olarak döndüren metot.
+        """
+        new_tweet_list = []
+        for tweet in tweet_list:
+            new_tweet_list.append((' '.join(self._nlpDetector.auto_correct(self._nlpDetector.list_words(tweet)))))
+        return new_tweet_list
+
+    def get_stem_words(self, tweet_list: list):
+        """
+        Cümle içersinde ki kelimeleri kökleriyle güncelleyerek yeni liste olarak döndüren metot.
+        """
+        new_tweet_list = []
+        for tweet in tweet_list:
+            new_tweet_list.append((' '.join(self._stem_words(tweet))))
+        return new_tweet_list
 
     def process(self, sentence: str):
         """
@@ -151,11 +153,11 @@ class TweetPreProcess(PreProcess):
     Tweet metinleri üzerinde ön işleme gerçekleştiren sınıf.
     """
 
-    def __init__(self, meta_characters, is_stem_words, is_typo_fix):
+    def __init__(self, meta_characters):
         """
         Yapıcı metot.
         """
-        super().__init__(meta_characters, is_stem_words, is_typo_fix)
+        super().__init__(meta_characters)
 
     @staticmethod
     def _cleaning_picurl(tweet):
