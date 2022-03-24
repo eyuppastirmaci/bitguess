@@ -21,22 +21,13 @@ class DataFile:
         """
         Veri dosyasında ön işleme yapıp yeni dosya olarak kaydeden metot.
         """
-        new_tweet_list = self._data_frame.text.tolist()
-        for i in range(len(new_tweet_list)):
-            new_tweet_list[i] = (self._preprocess.process(new_tweet_list[i]))
-        column_number = self._data_frame.columns[index]
-        self._data_frame.drop("id", axis=1, inplace=True)
-        self._data_frame.drop("user", axis=1, inplace=True)
-        self._data_frame.drop("fullname", axis=1, inplace=True)
-        self._data_frame.drop("url", axis=1, inplace=True)
-        self._data_frame.drop("timestamp", axis=1, inplace=True)
-        self._data_frame.drop("replies", axis=1, inplace=True)
-        self._data_frame.drop("likes", axis=1, inplace=True)
-        self._data_frame.drop("retweets", axis=1, inplace=True)
-        self._data_frame.drop("sentiment", axis=1, inplace=True)
-        self._data_frame[column_number] = new_tweet_list
-        self._data_frame.to_csv(out_path, encoding=self._encoding)
-        print("Ön İşleme Tamamlandı!")
+        new_tweet_list = self._preprocess.process(self.tweet_list)
+        # Ön islenen sütun hariç diğer sütunların çıkarılması.
+        for i in range(len(self._data_frame.columns)):
+            if i != index:
+                self._data_frame.drop(self._data_frame.columns[i])
+        self.update_column(index, new_tweet_list, out_path)
+        print("--- Ön İşleme Tamamlandı ✓ ---")
 
     def stemming(self, index: int, out_path: str):
         """

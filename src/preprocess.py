@@ -111,18 +111,6 @@ class PreProcess:
                 self._filtered_words.append(word)
         return ' '.join(self._filtered_words)
 
-    def _normalization(self, sentence):
-        """
-        Belirli ön işleme metotlarının tek bir fonksiyonda toplanması.
-        """
-        sentence = str(sentence).lower()
-        sentence = self._extract_stop_words(sentence)
-        sentence = self._clear_number(sentence)
-        sentence = self._clear_meta_characters(sentence)
-        sentence = self._clear_urls(sentence)
-        sentence = self._clear_domain(sentence)
-        return sentence
-
     def fix_typos(self, tweet_list: list):
         """
         Cümle içerisinde ki kelime hatalarını düzeltip yeni liste olarak döndüren metot.
@@ -141,11 +129,20 @@ class PreProcess:
             new_tweet_list.append((' '.join(self._stem_words(tweet))))
         return new_tweet_list
 
-    def process(self, sentence: str):
+    def process(self, data_list: list):
         """
         Parametre olarak verilen metinde ön işlene yapan metot.
         """
-        return self._normalization(sentence)
+        new_data_list = []
+        for sentence in data_list:
+            sentence = str(sentence).lower()
+            sentence = self._extract_stop_words(sentence)
+            sentence = self._clear_number(sentence)
+            sentence = self._clear_meta_characters(sentence)
+            sentence = self._clear_urls(sentence)
+            sentence = self._clear_domain(sentence)
+            new_data_list.append(sentence)
+        return new_data_list
 
 
 class TweetPreProcess(PreProcess):
@@ -182,16 +179,24 @@ class TweetPreProcess(PreProcess):
         """
         return re.sub(r"#\S+", "", tweet)
 
-    def process(self, sentence: str):
+    def process(self, data_list: list):
 
         """
         Parametre olarak verilen tweetde ön işlene yapan metot.
         """
-        sentence = super()._normalization(sentence)
-        sentence = self._clear_at(sentence)
-        sentence = self._clear_hashtags(sentence)
-        sentence = super()._clear_punctuation(sentence)
-        sentence = self._cleaning_picurl(sentence)
-        sentence = sentence.strip()
-        sentence = super()._clear_white_spaces(sentence)
-        return sentence
+        new_data_list = []
+        for sentence in data_list:
+            sentence = str(sentence).lower()
+            sentence = super()._extract_stop_words(sentence)
+            sentence = super()._clear_number(sentence)
+            sentence = super()._clear_meta_characters(sentence)
+            sentence = super()._clear_urls(sentence)
+            sentence = super()._clear_domain(sentence)
+            sentence = self._clear_at(sentence)
+            sentence = self._clear_hashtags(sentence)
+            sentence = super()._clear_punctuation(sentence)
+            sentence = self._cleaning_picurl(sentence)
+            sentence = sentence.strip()
+            sentence = super()._clear_white_spaces(sentence)
+            new_data_list.append(sentence)
+        return new_data_list
