@@ -22,17 +22,10 @@ class DataFile:
         """
         column_number = self._data_frame.columns[index]
         self._data_frame[column_number] = new_tweet_list
-
-        self._data_frame = self._data_frame.drop("id", axis=1)
-        self._data_frame = self._data_frame.drop("user", axis=1)
-        self._data_frame = self._data_frame.drop("fullname", axis=1)
-        self._data_frame = self._data_frame.drop("url", axis=1)
-        self._data_frame = self._data_frame.drop("timestamp", axis=1)
-        self._data_frame = self._data_frame.drop("likes", axis=1)
-        self._data_frame = self._data_frame.drop("replies", axis=1)
-        self._data_frame = self._data_frame.drop("retweets", axis=1)
-        self._data_frame = self._data_frame.drop("sentiment", axis=1)
-
+        processed_column_name = self._data_frame.columns[index]
+        for column in self._data_frame.columns:
+            if column != processed_column_name:
+                self._data_frame = self._data_frame.drop(column, axis=1)
         self._data_frame.to_csv(out_path, encoding=self._encoding, index=False)
 
     def pre_process_column(self, index: int, out_path: str):
