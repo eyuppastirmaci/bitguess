@@ -24,11 +24,6 @@ class PreProcess:
         self._meta_characters = meta_characters
         self._stopwords = stopwords.words(language)
         self._porter_stemmer = stemmer(language)
-        self._filtered_words = []
-        self._rooted_words = []
-        self._named_entities = []
-        self._lemmatized_words = []
-        self._word_net_lemmatizer = WordNetLemmatizer()
 
     @staticmethod
     def _part_of_speech(sentence: str):
@@ -80,11 +75,7 @@ class PreProcess:
         """
         Cümlenin köklerini bulan metot.
         """
-        if len(self._rooted_words):
-            self._rooted_words.clear()
-        for word in word_tokenize(sentence):
-            self._rooted_words.append(' '.join(self._porter_stemmer.stemWords(word.split())))
-        return self._rooted_words
+        return [self._porter_stemmer.stemWords(word.split()) for word in word_tokenize(sentence)]
 
     def _named_entity_recognition(self, sentence: str):
         """
@@ -104,30 +95,19 @@ class PreProcess:
         """
         Cümledeki gereksiz kelimeleri filtreleyen metot.
         """
-        if len(self._filtered_words):
-            self._filtered_words.clear()
-        for word in word_tokenize(sentence):
-            if word not in self._stopwords:
-                self._filtered_words.append(word)
-        return ' '.join(self._filtered_words)
+        return ' '.join([word for word in word_tokenize(sentence) if word not in self._stopwords])
 
     def fix_typos(self, tweet_list: list):
         """
         Cümle içerisinde ki kelime hatalarını düzeltip yeni liste olarak döndüren metot.
         """
-        new_tweet_list = []
-        for tweet in tweet_list:
-            new_tweet_list.append((' '.join(self._nlpDetector.auto_correct(self._nlpDetector.list_words(tweet)))))
-        return new_tweet_list
+        return [self._nlpDetector.auto_correct(self._nlpDetector.list_words(tweet)) for tweet in tweet_list]
 
     def get_stem_words(self, tweet_list: list):
         """
         Cümle içersinde ki kelimeleri kökleriyle güncelleyerek yeni liste olarak döndüren metot.
         """
-        new_tweet_list = []
-        for tweet in tweet_list:
-            new_tweet_list.append((' '.join(self._stem_words(tweet))))
-        return new_tweet_list
+        return [self._stem_words(tweet) for tweet in tweet_list]
 
     def process(self, data_list: list):
         """

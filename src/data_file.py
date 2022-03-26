@@ -23,7 +23,18 @@ class DataFile:
         """
         column_number = self._data_frame.columns[index]
         self._data_frame[column_number] = new_tweet_list
-        self._data_frame.to_csv(out_path, encoding=self._encoding)
+
+        self._data_frame = self._data_frame.drop("id", axis=1)
+        self._data_frame = self._data_frame.drop("user", axis=1)
+        self._data_frame = self._data_frame.drop("fullname", axis=1)
+        self._data_frame = self._data_frame.drop("url", axis=1)
+        self._data_frame = self._data_frame.drop("timestamp", axis=1)
+        self._data_frame = self._data_frame.drop("likes", axis=1)
+        self._data_frame = self._data_frame.drop("replies", axis=1)
+        self._data_frame = self._data_frame.drop("retweets", axis=1)
+        self._data_frame = self._data_frame.drop("sentiment", axis=1)
+
+        self._data_frame.to_csv(out_path, encoding=self._encoding, index=False)
 
     def pre_process_column(self, index: int, out_path: str):
         """
@@ -31,9 +42,6 @@ class DataFile:
         """
         new_tweet_list = self._preprocess.process(self.tweet_list)
         # Ön islenen sütun hariç diğer sütunların çıkarılması.
-        for i in range(len(self._data_frame.columns)):
-            if i != index:
-                self._data_frame.drop(self._data_frame.columns[i])
         self.__update_column(index, new_tweet_list, out_path)
         print("--- Ön İşleme Tamamlandı ✓ ---")
 
@@ -42,11 +50,11 @@ class DataFile:
         Kelimelerin Köklerini bularak yeni bir csv dosyası olarak kaydeden metot.
         """
         self.__update_column(index, self._preprocess.get_stem_words(self.tweet_list), out_path)
+        print("--- Köklerine Ayırma Tamamlandı ✓ ---")
 
     def fix_typos(self, index: int, out_path: str):
         """
         Yazım yanlışlarını düzelterek yeni bir csv dosyası olarak kaydeden metot.
         """
         self.__update_column(index, self._preprocess.fix_typos(self.tweet_list), out_path)
-
-
+        print("--- Hata Düzeltme Tamamlandı ✓ ---")

@@ -32,7 +32,7 @@ def main():
     meta_characters = ["rt ", "\n", "\t"]
     column_index = 8
     data_path = "data/data.csv"
-    out_path = "data/preprocessed-data.csv"
+    out_path = "data/preprocessed-data.txt"
     encoding = 'utf-8'
 
     preprocessing(column_index, data_path, encoding, meta_characters, out_path)

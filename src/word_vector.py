@@ -11,7 +11,7 @@ class WordVector:
         """
         Yapıcı metot.
         """
-        self._data = pd.read_csv(path, encoding=encoding).text.tolist()
+        self._data = pd.read_csv(path, encoding=encoding, low_memory=False).text.tolist()
         self._corpus = self.__get_corpus()
         self.model_sg = self.__get_model(1)
         self.model_cbow = self.__get_model(0)
@@ -26,8 +26,4 @@ class WordVector:
         """
         Model için gerekli kelime sözlüğünü oluşturan metot.
         """
-        corpus = []
-        for sentence in self._data:
-            if sentence is not None and isinstance(sentence, str):
-                corpus.append(sentence.split())
-        return corpus
+        return [sentence.split() for sentence in self._data if sentence is not None and isinstance(sentence, str)]
