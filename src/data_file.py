@@ -15,7 +15,6 @@ class DataFile:
         self.tweet_list = self._data_frame.text.tolist()
         self._preprocess = pre_process
         self._encoding = encoding
-        self._corpus = []
 
     def __update_column(self, index, new_tweet_list, out_path):
         """
