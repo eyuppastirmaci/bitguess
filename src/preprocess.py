@@ -1,7 +1,6 @@
 import nltk
 from nltk import pos_tag
 from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from turkishnlp import detector
 from snowballstemmer import stemmer
