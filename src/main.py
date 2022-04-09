@@ -1,6 +1,7 @@
 from preprocess import TweetPreProcess
 from data_file import DataFile
 from word_vector import WordVector
+from sentiment_analysis import LogisticRegressionModel
 
 
 def preprocessing(column_index, data_path, encoding, meta_characters, out_path):
@@ -27,16 +28,24 @@ def word_embedding(encoding, out_path):
     print(f"dump  : {model_cbow.wv.most_similar('dump')}")
 
 
+def sentiment_analysis(out_path):
+
+    # Lojistik regresyon kullanarak.
+    logistic_regression_model = LogisticRegressionModel(out_path, max_vectorizer_features=100000, max_model_iter=2000)
+    logistic_regression_model.get_word_weights()
+
+
 def main():
     # Parametreler
     meta_characters = ["rt ", "\n", "\t"]
     column_index = 8
     data_path = "../data/data.csv"
-    out_path = "../data/preprocessed-data.txt"
+    out_path = "../data/preprocessed_data.csv"
     encoding = 'utf-8'
 
-    preprocessing(column_index, data_path, encoding, meta_characters, out_path)
-    word_embedding(encoding, out_path)
+    #preprocessing(column_index, data_path, encoding, meta_characters, out_path)
+    #word_embedding(encoding, out_path)
+    sentiment_analysis(out_path)
 
 
 if __name__ == "__main__":

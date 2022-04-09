@@ -24,7 +24,7 @@ class DataFile:
         self._data_frame[column_number] = new_tweet_list
         processed_column_name = self._data_frame.columns[index]
         for column in self._data_frame.columns:
-            if column != processed_column_name:
+            if column != processed_column_name and column != 'sentiment':
                 self._data_frame = self._data_frame.drop(column, axis=1)
         self._data_frame.to_csv(out_path, encoding=self._encoding, index=False)
 
