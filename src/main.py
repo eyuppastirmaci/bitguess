@@ -20,13 +20,24 @@ def word_embedding(encoding, out_path):
 
 def logistic_regression(out_path):
     # Lojistik Regresyon modeli kullanarak regresyon analizi.
-    logistic_regression_model = LogisticRegressionModel(out_path, max_vectorizer_features=100000, max_model_iter=2000)
+
+    MAX_VECTORIZER_FEATURES = 100_000
+    MAX_MODEL_ITER = 2_000
+
+    logistic_regression_model = LogisticRegressionModel(out_path,
+                                                        max_vectorizer_features=MAX_VECTORIZER_FEATURES,
+                                                        max_model_iter=MAX_MODEL_ITER)
     logistic_regression_model.run()
 
 
-def sentiment_analysis(sentiment_analysis_data_path, training_ratio):
+def sentiment_analysis():
     # RNN-GRU modeli kullanarak duygu analizi.
-    rnn_gru_model = RnnGruModel(sentiment_analysis_data_path, training_ratio=training_ratio)
+
+    TRAINING_RATIO = 0.7
+    ANALYSIS_DATA_PATH = "../data/sentiment_analysis_data.csv"
+
+    rnn_gru_model = RnnGruModel(data_path=ANALYSIS_DATA_PATH,
+                                training_ratio=TRAINING_RATIO)
     rnn_gru_model.run()
 
 
@@ -37,8 +48,6 @@ def main():
     COLUMN_INDEX = 8
     DATA_PATH = "../data/data.csv"
     OUT_PATH = "../data/preprocessed_data.csv"
-    SENTIMENT_ANALYSIS_DATA_PATH = "../data/sentiment_analysis_data.csv"
-    TRAINING_RATIO = 0.7
 
     # preprocessing(DATA_PATH, ENCODING, META_CHARACTERS, COLUMN_INDEX, OUT_PATH)
 
@@ -46,7 +55,7 @@ def main():
 
     logistic_regression(OUT_PATH)
 
-    sentiment_analysis(SENTIMENT_ANALYSIS_DATA_PATH, training_ratio=TRAINING_RATIO)
+    sentiment_analysis()
 
 
 if __name__ == "__main__":

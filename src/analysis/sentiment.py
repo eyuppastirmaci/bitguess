@@ -9,8 +9,8 @@ from tensorflow.python.keras.optimizer_v1 import Adam
 
 class RnnGruModel:
 
-    def __init__(self, path, training_ratio):
-        self.path = path
+    def __init__(self, data_path, training_ratio):
+        self.path = data_path
         self.training_ratio = training_ratio
 
     def run(self):
