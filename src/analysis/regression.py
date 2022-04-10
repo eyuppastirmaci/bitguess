@@ -12,7 +12,7 @@ class LogisticRegressionModel:
         self.vectorizer = TfidfVectorizer(max_features=max_vectorizer_features)
         self.model = LogisticRegression(max_iter=max_model_iter)
 
-    def get_word_weights(self):
+    def run(self):
         df_ = pd.read_csv(self.path)[['sentiment', 'text']].copy()
         df = df_[['sentiment', 'text']].copy()
         target_map = {3: 3, 2: 2, 1: 1, 0: 0, -1: -1}
@@ -25,17 +25,16 @@ class LogisticRegressionModel:
         self.model.fit(X_train, Y_train)
         word_index_map = self.vectorizer.vocabulary_
 
+        print("\n\n======== Regresyon Analizi ========")
+
         print("En olumlu kelimeler")
         for word, index in word_index_map.items():
             weight = self.model.coef_[0][index]
             if weight > 2:
                 print(word, weight)
 
-        print("\n\n")
-
-        print("En olumsuz kelimeler")
+        print("\nEn olumsuz kelimeler")
         for word, index in word_index_map.items():
             weight = self.model.coef_[0][index]
             if weight < -2:
                 print(word, weight)
-

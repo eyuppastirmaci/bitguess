@@ -27,3 +27,19 @@ class WordVector:
         Model için gerekli kelime sözlüğünü oluşturan metot.
         """
         return [sentence.split() for sentence in self._data if sentence is not None and isinstance(sentence, str)]
+
+    def run(self):
+        model_sg = self.model_sg
+        model_cbow = self.model_cbow
+
+        print("\n\n======== Kelime Gömme ========")
+
+        # Skip-Gram modeli.
+        print(f"yukarı: {model_sg.wv.most_similar('yukarı')}")
+        print(f"artış : {model_sg.wv.most_similar('artış')}")
+        print(f"dump  : {model_sg.wv.most_similar('dump')}")
+        print("----------------------------------------------")
+        # Cbow modeli.
+        print(f"yukarı: {model_cbow.wv.most_similar('yukarı')}")
+        print(f"artış : {model_cbow.wv.most_similar('artış')}")
+        print(f"dump  : {model_cbow.wv.most_similar('dump')}")
