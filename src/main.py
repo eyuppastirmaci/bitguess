@@ -43,10 +43,6 @@ def sentiment_analysis():
     rnn_gru_model.run()
 
 
-def correlation_analysis(symbol: str, exchange: str, start_date: str = None):
-    pass
-
-
 def main():
     # Parametreler
     ENCODING = 'utf-8'
@@ -70,11 +66,15 @@ def main():
 
     # correlation_analysis()
 
+    """
     data.fetch_data(path=BTC_DATA_PATH,
                     target_currency=BTC_TO,
                     start=FETCH_START_DATE,
                     end=FETCH_END_DATE,
                     encoding=ENCODING)
+    """
+
+    data.show_data(path=BTC_DATA_PATH, encoding=ENCODING)
 
 
 if __name__ == "__main__":
