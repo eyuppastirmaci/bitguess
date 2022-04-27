@@ -1,5 +1,5 @@
 import pandas as pd
-from preprocess import PreProcess
+from ..process.preprocess import PreProcess
 
 
 class DataFile:
