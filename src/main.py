@@ -3,6 +3,8 @@ from data_file import DataFile
 from word_vector import WordVector
 from analysis.regression import LogisticRegressionModel
 from analysis.sentiment import RnnGruModel
+from currency import data
+import datetime as dt
 
 
 def preprocessing(data_path, encoding, meta_characters, column_index, out_path):
@@ -41,6 +43,10 @@ def sentiment_analysis():
     rnn_gru_model.run()
 
 
+def correlation_analysis(symbol: str, exchange: str, start_date: str = None):
+    pass
+
+
 def main():
     # Parametreler
     ENCODING = 'utf-8'
@@ -49,13 +55,26 @@ def main():
     DATA_PATH = "../data/data.csv"
     OUT_PATH = "../data/preprocessed_data.csv"
 
+    BTC_DATA_PATH = "../data/bitcoin_data.csv"
+    BTC_TO = "USD"
+    FETCH_START_DATE = dt.datetime(2017, 1, 1)
+    FETCH_END_DATE = dt.datetime.now()
+
     # preprocessing(DATA_PATH, ENCODING, META_CHARACTERS, COLUMN_INDEX, OUT_PATH)
 
-    word_embedding(ENCODING, OUT_PATH)
+    # word_embedding(ENCODING, OUT_PATH)
 
-    logistic_regression(OUT_PATH)
+    # logistic_regression(OUT_PATH)
 
-    sentiment_analysis()
+    # sentiment_analysis()
+
+    # correlation_analysis()
+
+    data.fetch_data(path=BTC_DATA_PATH,
+                    target_currency=BTC_TO,
+                    start=FETCH_START_DATE,
+                    end=FETCH_END_DATE,
+                    encoding=ENCODING)
 
 
 if __name__ == "__main__":
