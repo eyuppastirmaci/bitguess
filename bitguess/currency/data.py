@@ -9,6 +9,7 @@ import datetime as dt
 
 def fetch_data(path: str, target_currency: str, start: dt.datetime, end: dt.datetime, encoding: str):
     df = web.DataReader(f"BTC-{target_currency}", 'yahoo', start, end)
+    df = df.drop(columns=['High', 'Low', 'Open', 'Volume', 'Adj Close'])
     df.to_csv(path, encoding=encoding)
 
 

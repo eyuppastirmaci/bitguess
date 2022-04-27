@@ -1,9 +1,11 @@
+from bitguess.analysis.correlation import correlation
 from bitguess.process.preprocess import TweetPreProcess
 from bitguess.file.data_file import DataFile
 from bitguess.process.embedding import WordVector
 from analysis.regression import LogisticRegressionModel
 from analysis.sentiment import RnnGruModel
 from currency import data
+
 import datetime as dt
 
 
@@ -64,8 +66,6 @@ def main():
 
     # sentiment_analysis()
 
-    # correlation_analysis()
-
     """
     data.fetch_data(path=BTC_DATA_PATH,
                     target_currency=BTC_TO,
@@ -74,7 +74,9 @@ def main():
                     encoding=ENCODING)
     """
 
-    data.show_data(path=BTC_DATA_PATH, encoding=ENCODING)
+    # data.show_data(path=BTC_DATA_PATH, encoding=ENCODING)
+
+    correlation()
 
 
 if __name__ == "__main__":
