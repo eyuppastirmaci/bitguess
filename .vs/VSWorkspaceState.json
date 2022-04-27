@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\data",
-    "\\src"
+    "\\bitguess"
   ],
-  "SelectedNode": "\\src\\main.py",
+  "SelectedNode": "\\bitguess",
   "PreviewInSolutionExplorer": false
 }
