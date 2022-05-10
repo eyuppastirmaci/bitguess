@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
-      <module fileurl="file://$PROJECT_DIR$/../twitter-sentiment-analysis/.idea/twitter-sentiment-analysis.iml" filepath="$PROJECT_DIR$/../twitter-sentiment-analysis/.idea/twitter-sentiment-analysis.iml" />
-=======
-      <module fileurl="file://$PROJECT_DIR$/../bitguess/.idea/bitguess.iml" filepath="$PROJECT_DIR$/../bitguess/.idea/bitguess.iml" />
->>>>>>> 3533c31 (Currency & correlation data updates)
+      <module fileurl="file://$PROJECT_DIR$/.idea/twitter-sentiment-analysis.iml" filepath="$PROJECT_DIR$/.idea/twitter-sentiment-analysis.iml" />
     </modules>
   </component>
 </project>
