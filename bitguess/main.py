@@ -161,7 +161,7 @@ class WindowApp(QMainWindow):
         end_date = str(self.dateedit_end.date().toPyDate())
 
         graph = MplCanvas(self, width=5, height=10, dpi=100)
-        price_list, sentiment_list = data.show_data(path="../data/bitcoin_data.csv",
+        price_list, sentiment_list = data.show_data(path="../data/correlation_data.csv",
                                                     encoding='utf-8',
                                                     start_date=start_date,
                                                     end_date=end_date)
@@ -184,7 +184,7 @@ def main():
     DATA_PATH = "../data/data.csv"
     OUT_PATH = "../data/preprocessed_data.csv"
 
-    BTC_DATA_PATH = "../data/bitcoin_data.csv"
+    BTC_DATA_PATH = "../data/correlation_data.csv"
     BTC_TO = "USD"
     FETCH_START_DATE = dt.datetime(2017, 1, 1)
     FETCH_END_DATE = dt.datetime.now()
@@ -197,19 +197,17 @@ def main():
 
     # sentiment_analysis()
 
-    """
     data.fetch_data(path=BTC_DATA_PATH,
                     target_currency=BTC_TO,
                     start=FETCH_START_DATE,
                     end=FETCH_END_DATE,
                     encoding=ENCODING)
-    """
 
     # correlation()
 
-    app = QApplication(sys.argv)
-    ex = WindowApp()
-    sys.exit(app.exec_())
+    #app = QApplication(sys.argv)
+    #ex = WindowApp()
+    #sys.exit(app.exec_())
 
 
 if __name__ == "__main__":

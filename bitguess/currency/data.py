@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pandas_datareader as web
 
-import datetime as dts
+import datetime as dt
 
 
 def fetch_data(path: str, target_currency: str, start: dt.datetime, end: dt.datetime, encoding: str):
